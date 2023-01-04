@@ -74,7 +74,7 @@ def ready(request):
         last_four_digits_card, cash_amount, bank = row[45], row[46], row[47]
         discount_percent, reason_for_discount, health_plan_amount = row[48], row[49], row[50]
         type_of_insurance, financial_verifier, financial_verifier, fre = row[51], row[52], row[53], row[54]
-
+        
         patient = Patient(
             id=id,
             name=name,

@@ -17,8 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 from database_api import urls as database_api_urls
+from reports_api import urls as reports_api
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(database_api_urls.urlpatterns)),
+
+    path('api/reports/', include(reports_api.urlpatterns)),
 ]
