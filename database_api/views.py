@@ -27,7 +27,7 @@ class PatientListView(
     ListModelMixin,
     CreateModelMixin
 ):
-    queryset = Patient.objects.all()
+    queryset = Patient.objects.all().order_by('-surgery_date')
     serializer_class = PatientSerializer
     lookup_field = 'id'
     ordering = 'name'
@@ -45,7 +45,7 @@ class PatientDetailView(
     UpdateModelMixin,
     DestroyModelMixin
 ):
-    queryset = Patient.objects.all()
+    queryset = Patient.objects.all().order_by('-surgery_date')
     serializer_class = PatientSerializer
     lookup_field = 'id'
 
