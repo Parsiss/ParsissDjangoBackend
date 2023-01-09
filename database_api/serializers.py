@@ -69,3 +69,8 @@ class PatientSerializer(serializers.ModelSerializer):
             'CashAmount', 'Bank', 'DiscountPercent', 'ReasonForDiscount', 'HealthPlanAmount', 'TypeOfInsurance',
             'FinancialVerifier', 'ReceiptNumber', 'FRE'
         )
+        ordering = ('Name', )
+
+patient_variables_mapping = {key: value.source for key, value in PatientSerializer().fields.items()}
+reversed_patient_variables_mapping = {value: key for key, value in patient_variables_mapping.items()}
+

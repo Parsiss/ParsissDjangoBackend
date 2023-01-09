@@ -1,6 +1,9 @@
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q, Count
+from django.db.models.functions import Trim
 
-from .serializers import PatientSerializer
+from .serializers import PatientSerializer, patient_variables_mapping, reversed_patient_variables_mapping
 from .get_options import GetAllSelectOptions
 from .models import Patient
 from . import transfer
@@ -8,7 +11,7 @@ from . import transfer
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin
 
-import json, sqlite3
+import json, sqlite3, datetime, xlwt
 
 
 def GetOptions(request):
@@ -27,6 +30,7 @@ class PatientListView(
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
     lookup_field = 'id'
+    ordering = 'name'
 
     def get(self, request):
         return self.list(request)
@@ -58,7 +62,7 @@ class PatientDetailView(
 def ready(request):
     rows = transfer.rows
     for row in rows:
-        id, name, family, age = row[0], row[4], row[5], row[6]
+        name, family, age = row[4], row[5], row[6]
         phone_number, national_id, address, email = row[7], row[8], row[9], row[10]
         place_of_birth, surgery_date, surgery_day = row[11], row[12], row[13]
         surgery_time, surgery_type, surgery_area = row[14], row[15], row[16]
@@ -75,8 +79,38 @@ def ready(request):
         discount_percent, reason_for_discount, health_plan_amount = row[48], row[49], row[50]
         type_of_insurance, financial_verifier, _, _, _, fre = row[51], row[52], row[53], row[54], row[55], row[56]
 
+        # set time to None if it is 0
+        if surgery_time == 0:
+            surgery_time = None
+
+        if start_time == 0:
+            start_time = None
+        
+        if stop_time == 0:
+            stop_time = None
+        
+        if enter_time == 0:
+            enter_time = None
+        
+        if exit_time == 0:
+            exit_time = None
+        
+        if patient_enter_time == 0:
+            patient_enter_time = None
+        
+        if surgery_date == 0:
+            surgery_date = None
+        
+        if date_of_hospital_admission == 0:
+            date_of_hospital_admission = None
+
+        if date_of_first_contact == 0:
+            date_of_first_contact = None
+        
+        if date_of_payment == 0:
+            date_of_payment = None
+
         patient = Patient(
-            id=id,
             name=name,
             family=family,
             age=age,
@@ -132,11 +166,12 @@ def ready(request):
     return HttpResponse('ok')
 
 
-def GetFilteredReport(request):
-    body = json.loads(request.body)
-    data = Patient.objects.all().order_by('-surgery_date')
-    for key, value in body.items():
+
+def get_filtered_patients(filters):
+    data = Patient.objects.all()
+    for key, value in filters.items():
         if key == 'surgery_date':
+            value = [datetime.datetime.fromtimestamp(item) if item is not None else None for item in value]
             if value[0] is not None and value[1] is not None:
                 data = data.filter(surgery_date__range=(value[0], value[1]))
             elif value[0] is not None:
@@ -145,11 +180,57 @@ def GetFilteredReport(request):
                 data = data.filter(surgery_date__lte=value[1])
         else:
             if len(value) > 0:
-                data = data.filter(**{key: value})
+                q = Q()
+                for item in value:
+                    q |= Q(**{key: item})
+                data = data.filter(q)
+    return data
+
+
+@csrf_exempt
+def GetFilteredReport(request):
+    body = json.loads(request.body)
+    data = get_filtered_patients(body).order_by('-surgery_date')
     data = PatientSerializer(data, many=True)
     return JsonResponse(data.data, safe=False)
 
 
+def GetFilteredReportExcel(request):
+    body = json.loads(request.body)
+    data = get_filtered_patients(body).order_by('-surgery_date')
+    data = PatientSerializer(data, many=True)
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="filtered_report.xls"'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('filtered_report')
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    columns = [
+        'Name', 'Family', 'Age', 'Phone Number', 'National ID', 'Address', 'Email', 'Place of Birth', 'Surgery Date', 'Surgery Day', 'Surgery Time', 'Surgery Type', 'Surgery Area', 'Surgery Description', 'Surgery Result', 'Surgeon First', 'Surgeon Second', 'Resident', 'Hospital', 'Hospital Type', 'Hospital Address', 'CT', 'MR', 'FMRI', 'DTI', 'Operator First', 'Operator Second', 'Start Time', 'Stop Time', 'Enter Time', 'Exit Time', 'Patient Enter Time', 'Head Fix Type', 'Cancellation Reason', 'File Number', 'Date of Hospital Admission', 'Payment Status', 'Date of First Contact', 'Payment Note', 'First Caller', 'Date of Payment', 'Last Four Digits Card', 'Cash Amount', 'Bank', 'Discount Percent', 'Reason for Discount', 'Health Plan Amount', 'Type of Insurance', 'Financial Verifier', 'FRE'
+    ]
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+    font_style = xlwt.XFStyle()
+    for row in data.data:
+        row_num += 1
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, row[columns[col_num]], font_style)
+    wb.save(response)
+    return response
+
+
+@csrf_exempt
+def GetAutofillData(request):
+    fields = [patient_variables_mapping[item] for item in json.loads(request.body)]
+    data = Patient.objects.all()
+    response = {
+        reversed_patient_variables_mapping[field]: list(
+            data.annotate(cleaned=Trim(field)).values('cleaned').annotate(count=Count('cleaned')).order_by('-count').values_list('cleaned', 'count')
+        ) for field in fields
+    }
+    return JsonResponse(response, safe=False)
+            
 
 def UploadDB(request):
     reqBody = request.body

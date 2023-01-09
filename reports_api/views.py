@@ -1,13 +1,16 @@
 from django.http import JsonResponse
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 from django.db.models import Count, Case, When, Value, Q
 from django.db.models.functions import Trim
 
 from database_api.models import Patient
+from database_api.views import get_filtered_patients
+
 
 from datetime import datetime
-
+import json
 
 def FormatOperators(operators, types, surgeries):
     dict = { operator: {type: 0 for type in types } for operator in operators }
@@ -24,7 +27,7 @@ def FormatOperators(operators, types, surgeries):
     return dict
 
 
-class MonthlyReportView(View):
+class OperatorsDatedReportView(View):
     def get(self, request, *args, **kwargs):
         start_date = datetime.fromtimestamp(int(request.GET['start_date']))
         end_date = datetime.fromtimestamp(int(request.GET['end_date']))
@@ -57,3 +60,57 @@ class MonthlyReportView(View):
             'result': result,
             'types': types + ['مجموع']
         })
+
+
+
+class HospitalsDatedReportView(View):
+    def get(self, request, *args, **kwargs):
+        p1start_date = datetime.fromtimestamp(int(request.GET['p1start']))
+        p1end_date = datetime.fromtimestamp(int(request.GET['p1end']))
+        p2start_date = datetime.fromtimestamp(int(request.GET['p2start']))
+        p2end_date = datetime.fromtimestamp(int(request.GET['p2end']))
+
+        p1 = Q(surgery_date__gte=p1start_date, surgery_date__lte=p1end_date)
+        p2 = Q(surgery_date__gte=p2start_date, surgery_date__lte=p2end_date)
+
+        htypes = Patient.objects.filter(Q(surgery_result=1) & (p1 | p2)).annotate(
+            hospital_cleaned=Trim('hospital'),
+            htype=Case(
+            When(hospital_type=1, then=Value('دولتی')),
+            When(Q(hospital_type=0) & ~Q(hospital_cleaned='تهران'), then=Value('خصوصی')),
+            When(hospital_cleaned='تهران', then=Value('تهران')),
+        )).values_list('htype')
+
+        first_period = htypes.filter(p1).values_list('htype').annotate(period=Value('first_period'), count=Count('htype'))
+        second_period = htypes.filter(p2).values_list('htype').annotate(period=Value('second_period'), count=Count('htype'))
+
+        types = ['دولتی', 'خصوصی', 'تهران']
+        periods = ['first_period', 'second_period']
+        htypes = list(first_period) + list(second_period)
+
+        hospitals = { period: {type: 0 for type in types } for period in periods }
+        for hospital in htypes:
+            hospitals[hospital[1]][hospital[0]] = hospital[2]
+        
+        for period in periods:
+            values = []
+            for type in types:
+                values.append(hospitals[period][type])
+            hospitals[period] = values
+
+        return JsonResponse({
+            **hospitals,
+            'hospitals': types
+        })
+
+        
+@csrf_exempt
+def GetSuccessRateView(request):
+    body = json.loads(request.body)
+    patients = get_filtered_patients(body)
+    success = patients.values('surgery_result').annotate(count=Count('surgery_result'))
+
+    return JsonResponse({
+        'count': list(success.values_list('count', flat=True)),
+        'labels': list(success.values_list('surgery_result', flat=True))
+    })
