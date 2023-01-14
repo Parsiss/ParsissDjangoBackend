@@ -88,9 +88,9 @@ DATABASES = {
     'default': {
         # Postgres
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ParsissCRM',
+        'NAME': 'ParsissCrm',
         'USER': 'postgres',
-        'PASSWORD': 'VOXmuno98',
+        'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432',
     }
