@@ -1,3 +1,9 @@
+from django.db.models import Count
+from django.db.models.functions import Trim
+
+from .models import Patient
+
+
 def GetAllSelectOptions():
     surgeryDay = [
         {'Value': 1, 'Text': 'Saturday', 'Group': 'surgery_day'},
@@ -79,5 +85,23 @@ def GetAllSelectOptions():
         {'Value': 5, 'Text': 'Paid By Hospital', 'Group': 'payment_status'},
     ]
 
+
+
     return surgeryDay, surgerytime, surgeryarea, surgeryresult, hospitaltype, headfixtype, paymentstatus, CT, MR, DTI, FMRI
 
+
+def GetAllCharOptions(queryset):
+    extra_fields = ['surgeon_first', 'hospital', 'operator_first']
+    extra_fields_values = []
+    for field in extra_fields:
+        field_valeus = []
+        data = queryset.annotate(cleaned=Trim(field)).values_list('cleaned').annotate(count=Count('cleaned')).order_by('-count')
+        
+        for item in data:
+            field_valeus.append({
+                'Value': item[0],
+                'Text': item[0] + ' (' + str(item[1]) + ')',
+                'Group': field
+            })
+        extra_fields_values.append(field_valeus)
+    return (*extra_fields_values, )

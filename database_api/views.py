@@ -4,7 +4,7 @@ from django.db.models import Q, Count
 from django.db.models.functions import Trim
 
 from .serializers import PatientSerializer, patient_variables_mapping, reversed_patient_variables_mapping
-from .get_options import GetAllSelectOptions
+from .get_options import GetAllSelectOptions, GetAllCharOptions
 from .models import Patient
 from . import transfer
 
@@ -14,10 +14,16 @@ from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyMod
 import json, sqlite3, datetime, xlwt
 
 
+@csrf_exempt
 def GetOptions(request):
-    data = GetAllSelectOptions()
+    body = json.loads(request.body)
+    data = get_filtered_patients(body).order_by('-surgery_date')
+
+    basic_options = GetAllSelectOptions()
+    adaptive_options = GetAllCharOptions(data)
+
     appended = []
-    for data in data:
+    for data in basic_options + adaptive_options:
         appended.extend(data)
     return JsonResponse(appended, safe=False)
 
@@ -168,7 +174,12 @@ def ready(request):
 
 
 def get_filtered_patients(filters):
-    data = Patient.objects.all()
+    data = Patient.objects.all().annotate(
+        cleaned_surgeon_first=Trim('surgeon_first'),
+        cleaned_hospital=Trim('hospital'),
+        cleaned_operator_first=Trim('operator_first'),
+    )
+
     for key, value in filters.items():
         if key == 'surgery_date':
             value = [datetime.datetime.fromtimestamp(item) if item is not None else None for item in value]
@@ -182,7 +193,10 @@ def get_filtered_patients(filters):
             if len(value) > 0:
                 q = Q()
                 for item in value:
-                    q |= Q(**{key: item})
+                    if key in ['surgeon_first', 'hospital', 'operator_first']:
+                        q |= Q(**{'cleaned_' + key: item})
+                    else:
+                        q |= Q(**{key: item})
                 data = data.filter(q)
     return data
 
