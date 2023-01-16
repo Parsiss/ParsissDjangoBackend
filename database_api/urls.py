@@ -15,5 +15,5 @@ urlpatterns = [
 
     path('autofill/', views.GetAutofillData),
 
-    path('jdsfl;ajsdflkjasdklfja;sdfjas/', views.ready)
+    # path('dsfl;ajsdflkjasdklfja;sdfjas/', views.ready)
 ]
