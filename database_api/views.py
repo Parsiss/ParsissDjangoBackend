@@ -6,7 +6,7 @@ from django.db.models.functions import Trim
 from .serializers import PatientSerializer, patient_variables_mapping, reversed_patient_variables_mapping
 from .get_options import GetAllSelectOptions, GetAllCharOptions
 from .models import Patient
-from . import transfer
+# from . import transfer
 
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin
@@ -83,7 +83,7 @@ def ready(request):
         payment_note, first_caller, date_of_payment = row[42], row[43], row[44]
         last_four_digits_card, cash_amount, bank = row[45], row[46], row[47]
         discount_percent, reason_for_discount, health_plan_amount = row[48], row[49], row[50]
-        type_of_insurance, financial_verifier, _, _, _, fre = row[51], row[52], row[53], row[54], row[55], row[56]
+        type_of_insurance, financial_verifier, _, _, _, fre = row[51], row[52], row[53], row[54], row[55], 0
 
         # set time to None if it is 0
         if surgery_time == 0:
