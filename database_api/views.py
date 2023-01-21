@@ -6,7 +6,7 @@ from django.db.models.functions import Trim
 from .serializers import PatientSerializer, patient_variables_mapping, reversed_patient_variables_mapping
 from .get_options import GetAllSelectOptions, GetAllCharOptions
 from .models import Patient
-from . import transfer
+# from . import transfer
 
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin
