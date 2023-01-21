@@ -5,8 +5,8 @@ config_in = {
     'host': 'localhost',
     'port': 5432,
     'user': 'postgres',
-    'password': 'VOXmuno98',
-    'database': 'ParsissCRM'
+    'password': 'admin',
+    'database': 'ParsissCrm'
 }
 
 
