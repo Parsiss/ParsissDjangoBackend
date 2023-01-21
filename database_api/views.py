@@ -36,7 +36,6 @@ class PatientListView(
     queryset = Patient.objects.all().order_by('-surgery_date')
     serializer_class = PatientSerializer
     lookup_field = 'id'
-    ordering = 'name'
 
     def get(self, request):
         return self.list(request)
@@ -83,7 +82,7 @@ def ready(request):
         payment_note, first_caller, date_of_payment = row[42], row[43], row[44]
         last_four_digits_card, cash_amount, bank = row[45], row[46], row[47]
         discount_percent, reason_for_discount, health_plan_amount = row[48], row[49], row[50]
-        type_of_insurance, financial_verifier, _, _, _, fre = row[51], row[52], row[53], row[54], row[55], row[56]
+        type_of_insurance, financial_verifier, _, _, _, fre = row[51], row[52], row[53], row[54], row[55], 0
 
         # set time to None if it is 0
         if surgery_time == 0:
@@ -103,7 +102,7 @@ def ready(request):
         
         if patient_enter_time == 0:
             patient_enter_time = None
-        
+
         if surgery_date == 0:
             surgery_date = None
         
@@ -125,7 +124,7 @@ def ready(request):
             address=address,
             email=email,
             place_of_birth=place_of_birth,
-            surgery_date=surgery_date,
+            surgery_date=surgery_date.date() if surgery_date else None,
             surgery_day=surgery_day,
             surgery_time=surgery_time,
             surgery_type=surgery_type,
@@ -152,12 +151,12 @@ def ready(request):
             head_fix_type=head_fix_type,
             cancellation_reason=cancellation_reason,
             file_number=file_number,
-            date_of_hospital_admission=date_of_hospital_admission,
+            date_of_hospital_admission=date_of_hospital_admission.date() if date_of_hospital_admission else None,
             payment_status=payment_status,
-            date_of_first_contact=date_of_first_contact,
+            date_of_first_contact=date_of_first_contact.date() if date_of_first_contact else None,
             payment_note=payment_note,
             first_caller=first_caller,
-            date_of_payment=date_of_payment,
+            date_of_payment=date_of_payment.date() if date_of_payment else None,
             last_four_digits_card=last_four_digits_card,
             cash_amount=cash_amount,
             bank=bank,
