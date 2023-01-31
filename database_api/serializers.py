@@ -1,6 +1,7 @@
 from .models import Patient
 from rest_framework import serializers
 
+import datetime
 
 class PatientSerializer(serializers.ModelSerializer):
     ID = serializers.ReadOnlyField(source='id')
@@ -57,6 +58,21 @@ class PatientSerializer(serializers.ModelSerializer):
     FRE = serializers.IntegerField(source='fre', allow_null=True)
 
 
+    date_fields = ['surgery_date', 'date_of_hospital_admission', 'date_of_first_contact', 'date_of_payment']
+    def to_representation(self, instance):
+        for field in self.date_fields:
+            if getattr(instance, field) == datetime.date(1, 1, 1):
+                setattr(instance, field, "2002-05-16") # Abolfazl's birthday (To congratulate him email: odaat.iaath@gmail.com)
+        return super(PatientSerializer, self).to_representation(instance)
+
+    def to_internal_value(self, data):
+        for field in self.date_fields:
+            rfield = self.fields[field].source
+            if data.get(rfield) == '':
+                data[rfield] = datetime.date(1, 1, 1)
+        return super(PatientSerializer, self).to_internal_value(data)
+            
+
     class Meta:
         model = Patient
         fields = (
@@ -69,7 +85,6 @@ class PatientSerializer(serializers.ModelSerializer):
             'CashAmount', 'Bank', 'DiscountPercent', 'ReasonForDiscount', 'HealthPlanAmount', 'TypeOfInsurance',
             'FinancialVerifier', 'ReceiptNumber', 'FRE'
         )
-        ordering = ('Name', )
 
 patient_variables_mapping = {key: value.source for key, value in PatientSerializer().fields.items()}
 reversed_patient_variables_mapping = {value: key for key, value in patient_variables_mapping.items()}

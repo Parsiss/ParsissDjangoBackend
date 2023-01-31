@@ -8,8 +8,8 @@ from .get_options import GetAllSelectOptions, GetAllCharOptions
 from .models import Patient
 
 from CRMbackend import settings
-if settings.DEBUG is True:
-    from . import transfer
+# if settings.DEBUG is True:
+#     from . import transfer
 
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin
