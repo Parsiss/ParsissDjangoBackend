@@ -98,9 +98,12 @@ class HospitalsDatedReportView(View):
                 values.append(hospitals[period][type])
             hospitals[period] = values
 
+        for period in periods:
+            hospitals[period] = hospitals[period] + [sum(hospitals[period])]
+
         return JsonResponse({
             **hospitals,
-            'hospitals': types
+            'hospitals': types + ['مجموع']
         })
 
         
