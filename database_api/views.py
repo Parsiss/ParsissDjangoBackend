@@ -4,7 +4,7 @@ from django.db.models import Q, Count
 from django.db.models.functions import Trim
 
 from .serializers import PatientSerializer, patient_variables_mapping, reversed_patient_variables_mapping
-from .get_options import GetAllSelectOptions, GetAllCharOptions
+from .get_options import GetAllSelectOptions, GetAdaptiveFilterOptions
 from .models import Patient
 
 from CRMbackend import settings
@@ -17,18 +17,28 @@ from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyMod
 import json, sqlite3, datetime, xlwt
 
 
-@csrf_exempt
 def GetOptions(request):
-    body = json.loads(request.body)
-    data = get_filtered_patients(body).order_by('-surgery_date')
-
     basic_options = GetAllSelectOptions()
-    adaptive_options = GetAllCharOptions(data)
+    return JsonResponse(basic_options, safe=False)
 
-    appended = []
-    for data in basic_options + adaptive_options:
-        appended.extend(data)
-    return JsonResponse(appended, safe=False)
+
+def GetFilters(request):
+    basic_filters = GetAllSelectOptions()
+    requested_fields = ['surgery_area', 'surgery_result', 'hospital_type', 'payment_status']
+    return JsonResponse({field: basic_filters[field] for field in requested_fields}, safe=False)
+
+
+@csrf_exempt
+def GetAdaptiveFilters(request):
+    extra_fields = ['surgeon_first', 'hospital', 'operator_first']
+    body = json.loads(request.body)
+    for field in extra_fields:
+        if field in body:
+            del body[field]
+    
+    data = get_filtered_patients(body).order_by('-surgery_date')
+    adaptive_options = GetAdaptiveFilterOptions(data, extra_fields)
+    return JsonResponse(adaptive_options, safe=False)
 
 
 class PatientListView(

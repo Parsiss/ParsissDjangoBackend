@@ -5,6 +5,8 @@ from . import views
 
 urlpatterns = [
     path('options/', views.GetOptions),
+    path('filters/', views.GetFilters),
+    path('adaptive_filters/', views.GetAdaptiveFilters),
     path('report/filtered/', views.GetFilteredReport),
     path('report/excel/', views.GetFilteredReportExcel),
 

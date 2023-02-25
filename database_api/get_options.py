@@ -5,103 +5,96 @@ from .models import Patient
 
 
 def GetAllSelectOptions():
-    surgeryDay = [
-        {'Value': 1, 'Text': 'Saturday', 'Group': 'surgery_day'},
-        {'Value': 2, 'Text': 'Sunday', 'Group': 'surgery_day'},
-        {'Value': 3, 'Text': 'Monday', 'Group': 'surgery_day'},
-        {'Value': 4, 'Text': 'Tuesday', 'Group': 'surgery_day'},
-        {'Value': 5, 'Text': 'Wednesday', 'Group': 'surgery_day'},
-        {'Value': 6, 'Text': 'Thursday', 'Group': 'surgery_day'},
-        {'Value': 7, 'Text': 'Friday', 'Group': 'surgery_day'},
-    ]
+    surgeryDay = {
+        'surgery_day': [
+            {'Value': 1, 'Text': 'Saturday'},
+            {'Value': 2, 'Text': 'Sunday'},
+            {'Value': 3, 'Text': 'Monday'},
+            {'Value': 4, 'Text': 'Tuesday'},
+            {'Value': 5, 'Text': 'Wednesday'},
+            {'Value': 6, 'Text': 'Thursday'},
+            {'Value': 7, 'Text': 'Friday'},
+        ]
+    }
 
-    surgerytime = [
-        {'Value': 1, 'Text': 'Morning', 'Group': 'surgery_time'},
-        {'Value': 2, 'Text': 'Afternoon', 'Group': 'surgery_time'},
-        {'Value': 3, 'Text': 'Evening', 'Group': 'surgery_time'},
-        {'Value': 4, 'Text': 'Night', 'Group': 'surgery_time'},
-    ]
+    surgerytime = {
+        'surgery_time': [
+            {'Value': 1, 'Text': 'Morning'},
+            {'Value': 2, 'Text': 'Afternoon'},
+            {'Value': 3, 'Text': 'Evening'},
+            {'Value': 4, 'Text': 'Night'},
+        ]
+    }
+    surgeryarea = {
+        'surgery_area': [
+            {'Value': 1, 'Text': 'Neurosurgery'},
+            {'Value': 2, 'Text': 'ENT'},
+            {'Value': 3, 'Text': 'ENT & Neurosurgery'},
+            {'Value': 4, 'Text': 'CMF'},
+            {'Value': 5, 'Text': 'Spine'},
+            {'Value': 6, 'Text': 'Orthopedics'},
+        ]
+    }
 
-    surgeryarea = [
-        {'Value': 1, 'Text': 'Neurosurgery', 'Group': 'surgery_area'},
-        {'Value': 2, 'Text': 'ENT', 'Group': 'surgery_area'},
-        {'Value': 3, 'Text': 'ENT & Neurosurgery', 'Group': 'surgery_area'},
-        {'Value': 4, 'Text': 'CMF', 'Group': 'surgery_area'},
-        {'Value': 5, 'Text': 'Spine', 'Group': 'surgery_area'},
-        {'Value': 6, 'Text': 'Orthopedics', 'Group': 'surgery_area'},
-    ]
+    surgeryresult = {
+        'surgery_result': [
+            {'Value': 1, 'Text': 'Success'},
+            {'Value': 2, 'Text': 'Canceled'},
+            {'Value': 3, 'Text': 'Fail'},
+        ]
+    }
 
-    surgeryresult = [
-        {'Value': 1, 'Text': 'Success', 'Group': 'surgery_result'},
-        {'Value': 2, 'Text': 'Canceled', 'Group': 'surgery_result'},
-        {'Value': 3, 'Text': 'Fail', 'Group': 'surgery_result'},
-    ]
+    hospitaltype = {
+        'hospital_type': [
+            {'Value': 0, 'Text': 'Private'},
+            {'Value': 1, 'Text': 'Governmental'},
+            {'Value': 2, 'Text': 'Other'},
+        ]
+    }
 
-    hospitaltype = [
-        {'Value': 0, 'Text': 'Private', 'Group': 'hospital_type'},
-        {'Value': 1, 'Text': 'Governmental', 'Group': 'hospital_type'},
-        {'Value': 2, 'Text': 'Other', 'Group': 'hospital_type'},
-    ]
+    headfixtype = {
+        'head_fix_type': [
+            {'Value': 1, 'Text': 'Headband'},
+            {'Value': 2, 'Text': 'Mayfield'},
+            {'Value': 3, 'Text': 'Other'},
+        ]
+    }
 
-    headfixtype = [
-        {'Value': 1, 'Text': 'Headband', 'Group': 'head_fix_type'},
-        {'Value': 2, 'Text': 'Mayfield', 'Group': 'head_fix_type'},
-        {'Value': 3, 'Text': 'Other', 'Group': 'head_fix_type'},
-    ]
 
-    CT = [
+    ImageStatus = [
         {'Value': 1, 'Text': 'Not Checked', 'Group': 'ct'},
         {'Value': 2, 'Text': 'Not Exist', 'Group': 'ct'},
         {'Value': 3, 'Text': 'Exist And Valid', 'Group': 'ct'},
         {'Value': 4, 'Text': 'Exist And Not Valid', 'Group': 'ct'},
     ]
 
-    MR = [
-        {'Value': 1, 'Text': 'Not Checked', 'Group': 'mr'},
-        {'Value': 2, 'Text': 'Not Exist', 'Group': 'mr'},
-        {'Value': 3, 'Text': 'Exist And Valid', 'Group': 'mr'},
-        {'Value': 4, 'Text': 'Exist And Not Valid', 'Group': 'mr'},
-    ]
+    CT = { 'ct': ImageStatus }
+    MR = { 'mr': ImageStatus }
+    DTI = { 'dti': ImageStatus }
+    FMRI = { 'fmri': ImageStatus }
 
-    DTI = [
-        {'Value': 1, 'Text': 'Not Checked', 'Group': 'dti'},
-        {'Value': 2, 'Text': 'Not Exist', 'Group': 'dti'},
-        {'Value': 3, 'Text': 'Exist And Valid', 'Group': 'dti'},
-        {'Value': 4, 'Text': 'Exist And Not Valid', 'Group': 'dti'},
-    ]
-
-    FMRI = [
-        {'Value': 1, 'Text': 'Not Checked', 'Group': 'fmri'},
-        {'Value': 2, 'Text': 'Not Exist', 'Group': 'fmri'},
-        {'Value': 3, 'Text': 'Exist And Valid', 'Group': 'fmri'},
-        {'Value': 4, 'Text': 'Exist And Not Valid', 'Group': 'fmri'},
-    ]
-
-    paymentstatus = [
-        {'Value': 1, 'Text': 'Paid', 'Group': 'payment_status'},
-        {'Value': 2, 'Text': 'Not Paid', 'Group': 'payment_status'},
-        {'Value': 3, 'Text': 'Free', 'Group': 'payment_status'},
-        {'Value': 4, 'Text': 'Healthy Insurance', 'Group': 'payment_status'},
-        {'Value': 5, 'Text': 'Paid By Hospital', 'Group': 'payment_status'},
-    ]
+    paymentstatus = {
+        'payment_status': [
+            {'Value': 1, 'Text': 'Paid'},
+            {'Value': 2, 'Text': 'Not Paid'},
+            {'Value': 3, 'Text': 'Free'},
+            {'Value': 4, 'Text': 'Healthy Insurance'},
+            {'Value': 5, 'Text': 'Paid By Hospital'},
+        ]
+    }
 
 
 
-    return surgeryDay, surgerytime, surgeryarea, surgeryresult, hospitaltype, headfixtype, paymentstatus, CT, MR, DTI, FMRI
+    return surgeryDay | surgerytime | surgeryarea | surgeryresult | hospitaltype | headfixtype | CT | MR | DTI | FMRI | paymentstatus
 
 
-def GetAllCharOptions(queryset):
-    extra_fields = ['surgeon_first', 'hospital', 'operator_first']
-    extra_fields_values = []
-    for field in extra_fields:
-        field_valeus = []
+def GetAdaptiveFilterOptions(queryset, fields):
+    extra_fields_values = {}
+    for field in fields:
         data = queryset.annotate(cleaned=Trim(field)).values_list('cleaned').annotate(count=Count('cleaned')).order_by('-count')
-        
-        for item in data:
-            field_valeus.append({
-                'Value': item[0],
-                'Text': item[0] + ' (' + str(item[1]) + ')',
-                'Group': field
-            })
-        extra_fields_values.append(field_valeus)
-    return (*extra_fields_values, )
+        extra_fields_values[field] = [{
+                'Value': txt,
+                'Text': txt + ' (' + str(count) + ')',
+            } for txt, count in data
+        ]
+    return extra_fields_values
