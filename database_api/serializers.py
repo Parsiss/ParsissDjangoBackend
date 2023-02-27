@@ -67,7 +67,7 @@ class PatientSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         for field in self.date_fields:
-            rfield = self.fields[field].source
+            rfield = reversed_patient_variables_mapping[field]
             if data.get(rfield) == '':
                 data[rfield] = datetime.date(1, 1, 1)
         return super(PatientSerializer, self).to_internal_value(data)
