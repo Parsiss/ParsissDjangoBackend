@@ -191,7 +191,9 @@ def get_filtered_patients(filters):
         cleaned_hospital=Trim('hospital'),
         cleaned_operator_first=Trim('operator_first'),
     )
-
+    if filters == None:
+        filters = {}
+        
     for key, value in filters.items():
         if key == 'surgery_date':
             value = [datetime.datetime.fromtimestamp(item) if item is not None else None for item in value]
