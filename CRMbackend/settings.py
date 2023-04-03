@@ -23,15 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%ypostz9wfrv9-y%@db1yrae2@)^uw8a9^$8q5^)hr!7kpiz3#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '*',
     'localhost',
+    '192.168.1.201'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:4200',
+    'http://192.168.1.201:4200'
 ]
 
 # Application definition
@@ -88,10 +90,10 @@ DATABASES = {
     'default': {
         # Postgres
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ParsissCrm',
+        'NAME': 'ParsissCRM',
         'USER': 'postgres',
         'PASSWORD': 'admin',
-        'HOST': 'localhost',
+        'HOST': 'parsiss-nsql',
         'PORT': '5432',
     }
 }
