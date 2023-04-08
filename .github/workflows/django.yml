@@ -2,6 +2,7 @@ name: Django CI
 
 on:
   push:
+    tags: ["v*"]
     branches: [ "main" ]
 
 jobs:
@@ -35,7 +36,7 @@ jobs:
       with:
         draft: false
         prerelease: false
-        release_name: ${{ steps.version.outputs.version }}
+        release_name: Parsiss CRM Backend ${{ github.ref }}
         tag_name: ${{ github.ref }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
@@ -47,6 +48,6 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/django.exe
-        asset_name: django-${{ matrix.python-version }}.exe
+        asset_name: django-${{ github.ref }}.exe
         asset_content_type: application/zip
 
