@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
+from dotenv import load_dotenv, dotenv_values
+
+load_dotenv()
+config_values = dotenv_values()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,15 +30,17 @@ SECRET_KEY = 'django-insecure-%ypostz9wfrv9-y%@db1yrae2@)^uw8a9^$8q5^)hr!7kpiz3#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+hostip = config_values['HOSTNAME']
+print(hostip)
 ALLOWED_HOSTS = [
     '*',
     'localhost',
-    '192.168.1.201'
+    hostip
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:4200',
-    'http://192.168.1.201:4200'
+    f'http://{hostip}:4200'
 ]
 
 # Application definition
@@ -88,13 +95,12 @@ WSGI_APPLICATION = 'CRMbackend.wsgi.application'
 
 DATABASES = {
     'default': {
-        # Postgres
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ParsissCRM',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'parsiss-nsql',
-        'PORT': '5432',
+        'NAME': config_values['DATABASE_NAME'],
+        'USER': config_values['DATABASE_USER'],
+        'PASSWORD': config_values['DATABASE_PASSWORD'],
+        'HOST': config_values['DATABASE_HOST'],
+        'PORT': config_values['DATABASE_PORT'],
     }
 }
 
