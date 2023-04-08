@@ -28,7 +28,6 @@ if [ "$branch" = "main" ]; then
 
   echo "Pushing tags"
   git push --tags --no-verify
-
 fi
 
 exit 0
