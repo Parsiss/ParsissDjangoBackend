@@ -16,6 +16,18 @@ if [ "$branch" = "main" ]; then
   fi
 
   echo ": Tag is valid."
+
+  echo "Are you sure to push to $branch with tag $tag? (y/n)"
+  read -r answer
+  
+  if [ "$answer" != "y" ]; then
+    echo "Aborting push."
+    exit 1
+  fi
+
+  echo "Pushing to $branch with tag $tag."
+  git push --tags --no-verify
+
 fi
 
 exit 0
