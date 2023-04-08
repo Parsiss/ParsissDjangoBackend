@@ -1,5 +1,7 @@
 __pycache__
-venv
+venv/
+dist/
+build/
 .idea
 .env
 .vscode

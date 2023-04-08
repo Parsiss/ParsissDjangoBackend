@@ -30,8 +30,7 @@ SECRET_KEY = 'django-insecure-%ypostz9wfrv9-y%@db1yrae2@)^uw8a9^$8q5^)hr!7kpiz3#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-hostip = config_values['HOSTNAME']
-print(hostip)
+hostip = config_values.get('HOSTNAME', None)
 ALLOWED_HOSTS = [
     '*',
     'localhost',
@@ -96,11 +95,11 @@ WSGI_APPLICATION = 'CRMbackend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config_values['DATABASE_NAME'],
-        'USER': config_values['DATABASE_USER'],
-        'PASSWORD': config_values['DATABASE_PASSWORD'],
-        'HOST': config_values['DATABASE_HOST'],
-        'PORT': config_values['DATABASE_PORT'],
+        'NAME': config_values.get('DATABASE_NAME', None),
+        'USER': config_values.get('DATABASE_USER', None),
+        'PASSWORD': config_values.get('DATABASE_PASSWORD', None),
+        'HOST': config_values.get('DATABASE_HOST', None),
+        'PORT': config_values.get('DATABASE_PORT', None),
     }
 }
 
