@@ -1,0 +1,21 @@
+#!/bin/sh
+
+echo -n "Running pre-push script"
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$branch" = "main" ]; then
+  tag=$(git tag --points-at HEAD)
+
+  if [ -z "$tag" ]; then
+    echo -e ": \033[41mMaster branch commit requires a tag.\033[0m" >&2
+    exit 1
+  elif ! echo "$tag" | grep -q '^v[0-9].*'; then
+    echo -e ": \033[41mTag format is invalid. It should start with 'v' followed by a number and any other characters.\033[0m" >&2
+    exit 1
+  fi
+
+  echo ": Tag is valid."
+fi
+
+exit 0
