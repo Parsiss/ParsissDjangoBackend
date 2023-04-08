@@ -3,8 +3,6 @@ name: Django CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -29,7 +27,7 @@ jobs:
     - name: Create Django .exe
       run: |
         pip install pyinstaller
-        pyinstaller --onefile --noconsole --name=django.exe manage.py
+        pyinstaller django.exe.spec
   
     - name: Create Release
       uses: actions/create-release@v1
