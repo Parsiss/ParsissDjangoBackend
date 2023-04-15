@@ -17,3 +17,4 @@ To start repository follow these steps
 + Copy `dist/django.exe` to the server
 + Copy `.env` file and place it right next to the executable
 + Run `django.exe runserver --noreload` to start the server
+
