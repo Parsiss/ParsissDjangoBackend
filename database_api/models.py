@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.db.models.functions import Trim
+from django.db.models import Q
 
 class Patient(models.Model):
     id = models.AutoField(primary_key=True)
@@ -54,3 +55,12 @@ class Patient(models.Model):
     financial_verifier = models.CharField(max_length=100, default='')
     receipt_number = models.IntegerField(null=True)
     fre = models.FloatField(null=True)
+
+    @property
+    def previous_surgeries(self):
+        return Patient.objects.annotate(
+            cleaned_national_id=Trim('national_id')
+        ).exclude(
+            cleaned_national_id__in=['', '**', '***', 'اتباع']
+        ).filter(~Q(surgery_date=self.surgery_date), cleaned_national_id=self.national_id,).values_list('surgery_date', 'surgery_result')        
+        

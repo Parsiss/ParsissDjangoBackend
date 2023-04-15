@@ -3,6 +3,19 @@ from rest_framework import serializers
 
 import datetime
 
+
+class EventSerialize(serializers.ModelSerializer):
+    SurgeryDate = serializers.DateField(source='surgery_date', allow_null=True)
+    OperatorFirst = serializers.CharField(max_length=100, source='operator_first',  default='', allow_blank=True)
+    HospitalType = serializers.IntegerField(source='hospital_type', allow_null=True)
+    SurgeryResult = serializers.IntegerField(source='surgery_result', allow_null=True)
+    Hospital = serializers.CharField(max_length=100, source='hospital', default='', allow_blank=True)
+
+    class Meta:
+        model = Patient
+        fields = ('SurgeryDate', 'OperatorFirst', 'HospitalType', 'SurgeryResult', 'Hospital')
+
+
 class PatientSerializer(serializers.ModelSerializer):
     ID = serializers.ReadOnlyField(source='id')
     Name = serializers.CharField(max_length=100, source='name')
@@ -57,6 +70,7 @@ class PatientSerializer(serializers.ModelSerializer):
     ReceiptNumber = serializers.IntegerField(source='receipt_number', allow_null=True)
     FRE = serializers.IntegerField(source='fre', allow_null=True)
 
+    PreviousSurgeries = serializers.ListField(child=serializers.ListField(child=serializers.CharField(max_length=100)), source='previous_surgeries.all', read_only=True)
 
     date_fields = ['surgery_date', 'date_of_hospital_admission', 'date_of_first_contact', 'date_of_payment']
     def to_representation(self, instance):
@@ -75,6 +89,7 @@ class PatientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Patient
+        
         fields = (
             'ID', 'Name', 'Family', 'Age', 'PhoneNumber', 'NationalID', 'Address', 'Email', 'PlaceOfBirth', 'SurgeryDate',
             'SurgeryDay', 'SurgeryTime', 'SurgeryType', 'SurgeryArea', 'SurgeryDescription', 'SurgeryResult',
@@ -83,7 +98,7 @@ class PatientSerializer(serializers.ModelSerializer):
             'PatientEnterTime', 'HeadFixType', 'CancellationReason', 'FileNumber', 'DateOfHospitalAdmission',
             'PaymentStatus', 'DateOfFirstContact', 'PaymentNote', 'FirstCaller', 'DateOfPayment', 'LastFourDigitsCard',
             'CashAmount', 'Bank', 'DiscountPercent', 'ReasonForDiscount', 'HealthPlanAmount', 'TypeOfInsurance',
-            'FinancialVerifier', 'ReceiptNumber', 'FRE'
+            'FinancialVerifier', 'ReceiptNumber', 'FRE', 'PreviousSurgeries'
         )
 
 patient_variables_mapping = {key: value.source for key, value in PatientSerializer().fields.items()}

@@ -44,6 +44,13 @@ def GetAllSelectOptions():
         ]
     }
 
+    specialfilters = {
+        'special_filters': [
+            {'Value': 1, 'Text': 'Delayed'},
+            {'Value': 2, 'Text': 'Completely Cancelled'},
+        ]
+    }
+
     hospitaltype = {
         'hospital_type': [
             {'Value': 0, 'Text': 'Private'},
@@ -85,7 +92,7 @@ def GetAllSelectOptions():
 
 
 
-    return surgeryDay | surgerytime | surgeryarea | surgeryresult | hospitaltype | headfixtype | CT | MR | DTI | FMRI | paymentstatus
+    return surgeryDay | surgerytime | surgeryarea | surgeryresult | hospitaltype | headfixtype | CT | MR | DTI | FMRI | paymentstatus | specialfilters
 
 
 def GetAdaptiveFilterOptions(queryset, fields):
