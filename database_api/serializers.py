@@ -5,6 +5,7 @@ import datetime
 
 
 class EventSerialize(serializers.ModelSerializer):
+    ID = serializers.IntegerField(source='id')
     SurgeryDate = serializers.DateField(source='surgery_date', allow_null=True)
     OperatorFirst = serializers.CharField(max_length=100, source='operator_first',  default='', allow_blank=True)
     HospitalType = serializers.IntegerField(source='hospital_type', allow_null=True)
@@ -13,7 +14,7 @@ class EventSerialize(serializers.ModelSerializer):
 
     class Meta:
         model = Patient
-        fields = ('SurgeryDate', 'OperatorFirst', 'HospitalType', 'SurgeryResult', 'Hospital')
+        fields = ('ID', 'SurgeryDate', 'OperatorFirst', 'HospitalType', 'SurgeryResult', 'Hospital')
 
 
 class PatientSerializer(serializers.ModelSerializer):
