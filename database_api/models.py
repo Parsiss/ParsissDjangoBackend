@@ -58,9 +58,10 @@ class Patient(models.Model):
 
     @property
     def previous_surgeries(self):
+        # Calling this function is too expensive, use cautiously on large data
         return Patient.objects.annotate(
             cleaned_national_id=Trim('national_id')
         ).exclude(
             cleaned_national_id__in=['', '**', '***', 'اتباع']
         ).filter(~Q(surgery_date=self.surgery_date), cleaned_national_id=self.national_id,).values_list('surgery_date', 'surgery_result')        
-        
+
