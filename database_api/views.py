@@ -283,30 +283,19 @@ def GetCalendarEvents(request):
     serialize = EventSerialize(data, many=True)
     return JsonResponse(serialize.data, safe=False)
 
-
+@csrf_exempt
 def GetFilteredReportExcel(request):
     body = json.loads(request.body)
-    data = get_filtered_patients(body).order_by('-surgery_date')
-    data = PatientSerializer(data, many=True)
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="filtered_report.xls"'
-    wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet('filtered_report')
-    row_num = 0
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
-    columns = [
-        'Name', 'Family', 'Age', 'Phone Number', 'National ID', 'Address', 'Email', 'Place of Birth', 'Surgery Date', 'Surgery Day', 'Surgery Time', 'Surgery Type', 'Surgery Area', 'Surgery Description', 'Surgery Result', 'Surgeon First', 'Surgeon Second', 'Resident', 'Hospital', 'Hospital Type', 'Hospital Address', 'CT', 'MR', 'FMRI', 'DTI', 'Operator First', 'Operator Second', 'Start Time', 'Stop Time', 'Enter Time', 'Exit Time', 'Patient Enter Time', 'Head Fix Type', 'Cancellation Reason', 'File Number', 'Date of Hospital Admission', 'Payment Status', 'Date of First Contact', 'Payment Note', 'First Caller', 'Date of Payment', 'Last Four Digits Card', 'Cash Amount', 'Bank', 'Discount Percent', 'Reason for Discount', 'Health Plan Amount', 'Type of Insurance', 'Financial Verifier', 'FRE'
-    ]
-    for col_num in range(len(columns)):
-        ws.write(row_num, col_num, columns[col_num], font_style)
-    font_style = xlwt.XFStyle()
-    for row in data.data:
-        row_num += 1
-        for col_num in range(len(columns)):
-            ws.write(row_num, col_num, row[columns[col_num]], font_style)
-    wb.save(response)
-    return response
+    filters = json.loads(body['filters'])
+
+    data = get_filtered_patients(filters).order_by('-surgery_date')
+    serialize = PatientSerializer(data, many=True)
+    return JsonResponse({
+        'data': serialize.data,
+        'total': data.count()
+        },
+        safe=False
+    )
 
 
 @csrf_exempt
@@ -320,14 +309,14 @@ def GetAutofillData(request):
     }
     return JsonResponse(response, safe=False)
             
-
+@csrf_exempt
 def UploadDB(request):
     reqBody = request.body
     with open('temp.db', 'wb') as f:
         f.write(reqBody)
     db = sqlite3.connect('temp.db')
     cursor = db.cursor()
-    cursor.execute('SELECT Table_PatientData.NationalCode, RegistrationData.Error FROM RegistrationData INNER JOIN Table_PatientData ON RegistrationData.PatientUid = Table_PatientData.PK_PatientUID')
+    cursor.execute('SELECT SurgeryForms.NationalCode, RegistrationData.Error FROM RegistrationData INNER JOIN SurgeryForms ON RegistrationData.PatientUid = SurgeryForms.PatientUid')
     joined_data = cursor.fetchall()
     for data in joined_data:
         national_id = data[0]
@@ -335,5 +324,14 @@ def UploadDB(request):
         for patient in fulldata:
             if patient.fre == 0:
                 patient.fre = round(data[1], 2)
+                patient.save()
+    cursor.execute('SELECT * FROM SurgeryForms')
+    surgery_form_data = cursor.fetchall()
+    for data in surgery_form_data:
+        national_id = data[2]
+        fulldata = Patient.objects.filter(national_id=national_id).order_by('surgery_date')
+        for patient in fulldata:
+            if patient.surgery_description == "":
+                patient.surgery_description = data[9]
                 patient.save()
     return HttpResponse(status=200)
