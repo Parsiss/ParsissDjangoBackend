@@ -27,8 +27,9 @@ if [ "$branch" = "main" ]; then
       # Use a default response when /dev/tty is not available
       response="n"
       if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-      echo "Aborting push"
-      exit 1
+        echo "Aborting push"
+        exit 1
+      fi
   fi
 
   echo "Pushing tags"
