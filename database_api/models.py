@@ -63,5 +63,5 @@ class Patient(models.Model):
             cleaned_national_id=Trim('national_id')
         ).exclude(
             cleaned_national_id__in=['', '**', '***', 'اتباع']
-        ).filter(~Q(surgery_date=self.surgery_date), cleaned_national_id=self.national_id,).values_list('surgery_date', 'surgery_result')        
+        ).filter(~Q(surgery_date=self.surgery_date), cleaned_national_id=self.national_id,).values_list('surgery_date', 'surgery_result')
 

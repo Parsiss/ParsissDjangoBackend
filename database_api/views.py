@@ -14,7 +14,8 @@ from django.db.models.functions import Trim
 
 from django.contrib.postgres.aggregates import ArrayAgg
 
-from .serializers import EventSerialize, PatientSerializer, patient_variables_mapping, reversed_patient_variables_mapping
+from .serializers import EventSerialize, PatientSerializer, patient_variables_mapping, \
+    reversed_patient_variables_mapping, CustomPatientSerializer
 from .get_options import GetAllSelectOptions, GetAdaptiveFilterOptions
 from .models import Patient
 
@@ -276,6 +277,19 @@ def GetFilteredReport(request):
         safe=False
     )
 
+@csrf_exempt
+def GetSearchReport(request):
+    body = json.loads(request.body)
+    filters = json.loads(body['filters'])
+
+    data = get_filtered_patients(filters).order_by('-surgery_date')
+    serialize = CustomPatientSerializer(data, many=True)
+    return JsonResponse({
+        'data': serialize.data,
+        'total': data.count()
+        },
+        safe=False
+    )
 
 @csrf_exempt
 def GetCalendarEvents(request):
