@@ -1,10 +1,13 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin
 
-from .models import Devices, Centers
-from .serializers import DeviceSerializer, CenterSerializer
+from .models import Devices, Centers, Events
+from .serializers import DeviceSerializer, CenterSerializer, EventsSerizlier
 
-class CentersDetailView(ListModelMixin, CreateModelMixin, DestroyModelMixin, GenericAPIView):
+import json 
+
+
+class CentersListView(ListModelMixin, CreateModelMixin, GenericAPIView):
     queryset = Centers.objects.all()
     serializer_class = CenterSerializer
 
@@ -14,14 +17,28 @@ class CentersDetailView(ListModelMixin, CreateModelMixin, DestroyModelMixin, Gen
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+
+
+class CentersDetailView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
+    queryset = Centers.objects.all()
+    serializer_class = CenterSerializer
+    lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
 
 
-class DevicesView(ListModelMixin, CreateModelMixin, DestroyModelMixin, GenericAPIView):
+class DevicesListView(ListModelMixin, CreateModelMixin, GenericAPIView):
     queryset = Devices.objects.all()
     serializer_class = DeviceSerializer
+    lookup_field = 'id'
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -29,6 +46,56 @@ class DevicesView(ListModelMixin, CreateModelMixin, DestroyModelMixin, GenericAP
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+
+
+class DevicesDetailView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
+    queryset = Devices.objects.all()
+    serializer_class = DeviceSerializer
+    lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+
+
+class EventsListView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    queryset = Events.objects.all()
+    serializer_class = EventsSerizlier
+    lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class EventsDetailView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
+    queryset = Events.objects.all()
+    serializer_class = EventsSerizlier
+    lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class EventsFilteredView(ListModelMixin, GenericAPIView):
+    def get_queryset(self):
+        return Events.objects.filter(device_id=self.kwargs['device_id'])
+
+    serializer_class = EventsSerizlier
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
