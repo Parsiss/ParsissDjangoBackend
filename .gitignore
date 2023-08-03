@@ -2,6 +2,7 @@ __pycache__
 venv/
 dist/
 build/
+uploads/
 .idea
 .env
 .vscode
