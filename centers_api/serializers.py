@@ -23,9 +23,9 @@ class DeviceFilesSerializer(serializers.ModelSerializer):
 class DeviceSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     version = serializers.CharField()
-    bundle_version = serializers.CharField()
-    windows_version = serializers.CharField()
-    system_password = serializers.CharField()
+    bundle_version = serializers.CharField(required=False, allow_blank=True)
+    windows_version = serializers.CharField(required=False, allow_blank=True)
+    system_password = serializers.CharField(required=False, allow_blank=True)
     center = serializers.CharField(source='center.name', read_only=True)
     center_id = serializers.IntegerField()
 
@@ -60,12 +60,11 @@ class CenterSerializer(serializers.ModelSerializer):
 
 class EventsSerizlier(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    description = serializers.CharField()
+    description = serializers.CharField(required=False, allow_blank=True)
     date = serializers.DateTimeField()
     type = serializers.ChoiceField(choices=Events.EventType)
     device_id = serializers.IntegerField()
     files = DeviceFilesSerializer(many=True, read_only=True)
-
 
     class Meta:
         model = Events
