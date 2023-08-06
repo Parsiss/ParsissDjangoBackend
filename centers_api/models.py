@@ -14,6 +14,7 @@ class Centers(models.Model):
 
 class Devices(models.Model):
     id = models.AutoField(primary_key=True)
+    name = models.TextField(max_length=100)
     version = models.TextField(max_length=100)
     bundle_version = models.TextField(max_length=100)
     windows_version = models.TextField(max_length=100)

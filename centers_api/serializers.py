@@ -22,7 +22,8 @@ class DeviceFilesSerializer(serializers.ModelSerializer):
 
 class DeviceSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    version = serializers.CharField()
+    name = serializers.CharField()
+    version = serializers.CharField(required=False, allow_blank=True)
     bundle_version = serializers.CharField(required=False, allow_blank=True)
     windows_version = serializers.CharField(required=False, allow_blank=True)
     system_password = serializers.CharField(required=False, allow_blank=True)
@@ -33,7 +34,7 @@ class DeviceSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Devices
-        fields = ['id', 'files', 'version', 'windows_version', 'system_password', 'bundle_version', 'center', 'center_id']
+        fields = ['id', 'name', 'files', 'version', 'windows_version', 'system_password', 'bundle_version', 'center', 'center_id']
 
 
 
@@ -43,7 +44,7 @@ class CenterSerializer(serializers.ModelSerializer):
     devices = serializers.SlugRelatedField(
         many=True,
         read_only=True,
-        slug_field='version'
+        slug_field='name'
     )
     devices_id = serializers.SlugRelatedField(
         many=True,
