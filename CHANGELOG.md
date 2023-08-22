@@ -1,3 +1,6 @@
+## 1.016 (August 22, 2023)
+
+
 ## 0.1.0 (August 22, 2023)
   - Add and initiate Bump version
   - Update django.exe.spec
