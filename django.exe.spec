@@ -8,7 +8,7 @@ a = Analysis(
     ['manage.py'],
     pathex=[],
     binaries=[],
-    datas=[('database_api', 'database_api'), ('reports_api', 'reports_api'), ('CRMbackend', 'CRMbackend')],
+    datas=[('database_api', 'database_api'), ('reports_api', 'reports_api'), ('CRMbackend', 'CRMbackend'), ('centers_api', 'centers_api')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

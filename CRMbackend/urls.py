@@ -18,6 +18,10 @@ from django.urls import path, include
 
 from database_api import urls as database_api_urls
 from reports_api import urls as reports_api
+from centers_api import urls as centers_api
+
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -32,5 +36,6 @@ urlpatterns = [
     path('validate-token/', TokenVerifyView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include(database_api_urls.urlpatterns)),
+    path('api/centers/', include(centers_api.urlpatterns)),
     path('api/reports/', include(reports_api.urlpatterns)),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
