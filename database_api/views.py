@@ -27,6 +27,9 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin
 
 import json, sqlite3, datetime, xlwt
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import permission_classes
+
 
 
 
@@ -63,7 +66,9 @@ def GetFilters(request):
 
 
 @csrf_exempt
+@permission_classes([IsAuthenticated])
 def GetAdaptiveFilters(request):
+
     extra_fields = ['surgeon_first', 'hospital', 'operator_first']
     body = json.loads(request.body)
     for field in extra_fields:
@@ -83,6 +88,8 @@ class PatientListView(
     queryset = Patient.objects.all().order_by('-surgery_date')
     serializer_class = PatientSerializer
     lookup_field = 'id'
+    permission_classes = [IsAuthenticated]
+
 
     def get(self, request):
         return self.list(request)
@@ -100,6 +107,7 @@ class PatientDetailView(
     queryset = Patient.objects.all().order_by('-surgery_date')
     serializer_class = PatientSerializer
     lookup_field = 'id'
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id=None):
         return self.retrieve(request, id)
@@ -218,7 +226,7 @@ def ready(request):
     return HttpResponse('ok')
 
 
-
+@permission_classes([IsAuthenticated])
 def get_filtered_patients(filters):
     data = Patient.objects.all().annotate(
         cleaned_surgeon_first=Trim('surgeon_first'),
@@ -260,6 +268,7 @@ def get_filtered_patients(filters):
 
 
 @csrf_exempt
+@permission_classes([IsAuthenticated])
 def GetFilteredReport(request):
     body = json.loads(request.body)
     filters = json.loads(body['filters'])
@@ -278,6 +287,7 @@ def GetFilteredReport(request):
     )
 
 @csrf_exempt
+@permission_classes([IsAuthenticated])
 def GetSearchReport(request):
     body = json.loads(request.body)
     filters = json.loads(body['filters'])
@@ -292,12 +302,14 @@ def GetSearchReport(request):
     )
 
 @csrf_exempt
+@permission_classes([IsAuthenticated])
 def GetCalendarEvents(request):
     data = Patient.objects.order_by('-surgery_date')
     serialize = EventSerialize(data, many=True)
     return JsonResponse(serialize.data, safe=False)
 
 @csrf_exempt
+@permission_classes([IsAuthenticated])
 def GetFilteredReportExcel(request):
     body = json.loads(request.body)
     filters = json.loads(body['filters'])
@@ -313,6 +325,7 @@ def GetFilteredReportExcel(request):
 
 
 @csrf_exempt
+@permission_classes([IsAuthenticated])
 def GetAutofillData(request):
     fields = [patient_variables_mapping[item] for item in json.loads(request.body)]
     data = Patient.objects.all()
@@ -324,6 +337,7 @@ def GetAutofillData(request):
     return JsonResponse(response, safe=False)
             
 @csrf_exempt
+@permission_classes([IsAuthenticated])
 def UploadDB(request):
     reqBody = request.body
     with open('temp.db', 'wb') as f:

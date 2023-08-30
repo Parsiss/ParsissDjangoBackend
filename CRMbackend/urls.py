@@ -18,11 +18,19 @@ from django.urls import path, include
 
 from database_api import urls as database_api_urls
 from reports_api import urls as reports_api
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView
+)
+
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('validate-token/', TokenVerifyView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include(database_api_urls.urlpatterns)),
-
     path('api/reports/', include(reports_api.urlpatterns)),
 ]
