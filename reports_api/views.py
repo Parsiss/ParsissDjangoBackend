@@ -30,6 +30,8 @@ def FormatOperators(operators, types, surgeries):
 
 
 class OperatorsDatedReportView(View):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         start_date = datetime.fromtimestamp(int(request.GET['start_date']))
         end_date = datetime.fromtimestamp(int(request.GET['end_date']))
@@ -155,9 +157,6 @@ def GetPatientsDatedReport(request, *args, **kwargs):
         **hospitals,
         'hospitals': types + ['مجموع']
     })
-
-
-
 
 @csrf_exempt
 @permission_classes([IsAuthenticated])

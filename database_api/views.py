@@ -43,22 +43,25 @@ def CountSurgeries():
         cleaned_national_id=Trim('national_id')
     ).exclude(cleaned_national_id__in=['', '***', 'اتباع'])
 
-
+@permission_classes([IsAuthenticated])
 def GetMoreThanOneSurgery():
     return CountSurgeries().filter(surgery_count__gt=1).values('national_id')
-    # return Patient.objects.filter(national_id__in=national_ids).order_by('-surgery_date') 
+    # return Patient.objects.filter(national_id__in=national_ids).order_by('-surgery_date')
 
+@permission_classes([IsAuthenticated])
 def GetCanceledSurgeries():
     return CountSurgeries().filter(Q(cancel_count=F('surgery_count'))).values('national_id')
 
+@permission_classes([IsAuthenticated])
 def GetDelayedSurgeries():
     return CountSurgeries().filter(Q(cancel_count__gt=0) & Q(success_count__gt=0)).values('national_id')
 
+@permission_classes([IsAuthenticated])
 def GetOptions(request):
     basic_options = GetAllSelectOptions()
     return JsonResponse(basic_options, safe=False)
 
-
+@permission_classes([IsAuthenticated])
 def GetFilters(request):
     basic_filters = GetAllSelectOptions()
     requested_fields = ['surgery_area', 'special_filters', 'surgery_result', 'hospital_type', 'payment_status']
