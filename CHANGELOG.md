@@ -1,3 +1,8 @@
+## 1.3.0 (October 01, 2023)
+  - add rest_framework_simplejwt
+  - add rest_framework_simplejwt
+  - auth
+
 ## 1.2.0 (October 01, 2023)
 
 
