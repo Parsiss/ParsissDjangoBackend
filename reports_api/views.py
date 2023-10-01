@@ -10,7 +10,7 @@ from database_api.views import get_filtered_patients
 
 from datetime import datetime
 import json
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 
 @permission_classes([IsAuthenticated])
@@ -68,6 +68,7 @@ class OperatorsDatedReportView(View):
 
 
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def GetHospitalsDatedReport(request, *args, **kwargs):
     body = json.loads(request.body)
@@ -114,6 +115,7 @@ def GetHospitalsDatedReport(request, *args, **kwargs):
 
 
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def GetPatientsDatedReport(request, *args, **kwargs):
     body = json.loads(request.body)
@@ -159,6 +161,7 @@ def GetPatientsDatedReport(request, *args, **kwargs):
     })
 
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def GetSuccessRateView(request):
     body = json.loads(request.body)

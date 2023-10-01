@@ -36,11 +36,22 @@ ALLOWED_HOSTS = [
     hostip
 ]
 
+# CORS_ALLOW_ALL_ORIGINS = True
+
+
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:4200',
-    f'http://{hostip}:4200'
+    f'http://{hostip}:4200',
 ]
-
+# CORS_ALLOW_HEADERS = (
+#     "accept",
+#     "authorization",
+#     "content-type",
+#     "user-agent",
+#     "x-csrftoken",
+#     "x-requested-with",
+#     "ngrok-skip-browser-warning"
+# )
 # Application definition
 
 INSTALLED_APPS = [

@@ -6,6 +6,7 @@ from django.db.models import TextField
 from django.contrib.postgres.fields import ArrayField
 import pytz
 
+
 class Array(Subquery):
     template = 'ARRAY(%(subquery)s)'
     output_field = ArrayField(base_field=TextField())
@@ -28,7 +29,7 @@ from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyMod
 
 import json, sqlite3, datetime, xlwt
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes, api_view
 
 
 
@@ -56,11 +57,13 @@ def GetCanceledSurgeries():
 def GetDelayedSurgeries():
     return CountSurgeries().filter(Q(cancel_count__gt=0) & Q(success_count__gt=0)).values('national_id')
 
-@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+@permission_classes([IsAuthenticated,])
 def GetOptions(request):
     basic_options = GetAllSelectOptions()
     return JsonResponse(basic_options, safe=False)
 
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetFilters(request):
     basic_filters = GetAllSelectOptions()
@@ -69,6 +72,7 @@ def GetFilters(request):
 
 
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def GetAdaptiveFilters(request):
 
@@ -271,6 +275,7 @@ def get_filtered_patients(filters):
 
 
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def GetFilteredReport(request):
     body = json.loads(request.body)
@@ -290,6 +295,7 @@ def GetFilteredReport(request):
     )
 
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def GetSearchReport(request):
     body = json.loads(request.body)
@@ -305,6 +311,7 @@ def GetSearchReport(request):
     )
 
 @csrf_exempt
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetCalendarEvents(request):
     data = Patient.objects.order_by('-surgery_date')
@@ -312,6 +319,7 @@ def GetCalendarEvents(request):
     return JsonResponse(serialize.data, safe=False)
 
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def GetFilteredReportExcel(request):
     body = json.loads(request.body)
@@ -328,6 +336,7 @@ def GetFilteredReportExcel(request):
 
 
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def GetAutofillData(request):
     fields = [patient_variables_mapping[item] for item in json.loads(request.body)]
@@ -340,6 +349,7 @@ def GetAutofillData(request):
     return JsonResponse(response, safe=False)
             
 @csrf_exempt
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def UploadDB(request):
     reqBody = request.body
