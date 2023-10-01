@@ -1,3 +1,6 @@
+## 1.2.0 (October 01, 2023)
+
+
 ## 1.1.0 (September 03, 2023)
   - auth
   - Merge remote-tracking branch 'origin/main'
