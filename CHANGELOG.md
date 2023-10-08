@@ -1,4 +1,7 @@
-## 1.3.0 (October 01, 2023)
+## 1.2.1 (October 04, 2023)
+  - Add Fields
+  - Bug fix
+  - fix bump-version default encoding
   - add rest_framework_simplejwt
   - add rest_framework_simplejwt
   - auth

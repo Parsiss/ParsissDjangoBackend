@@ -7,7 +7,7 @@ import os
 
 # Create your models here.
 class Centers(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True) 
     name = models.TextField(max_length=100, null=False, blank=False)
 
 
@@ -21,6 +21,9 @@ class Devices(models.Model):
     system_password = models.TextField(max_length=100)
     center = models.ForeignKey(Centers, on_delete=models.CASCADE, related_name='devices')
 
+    serial_number = models.CharField(max_length=35)
+    model = models.CharField(max_length=10, null=True)
+    installation_year = models.IntegerField(null=True)
 
 
 class Events(models.Model):
@@ -46,6 +49,7 @@ class DeviceFiles(models.Model):
     file = models.FileField()
     device = models.ForeignKey(to=Devices, related_name='files', on_delete=models.CASCADE)
     event = models.ForeignKey(to=Events, related_name='files', null=True, on_delete=models.CASCADE)
+
     created_at = models.DateTimeField(auto_now_add =True)
 
     def filename(self):

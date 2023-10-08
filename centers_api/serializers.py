@@ -30,12 +30,15 @@ class DeviceSerializer(serializers.ModelSerializer):
     center = serializers.CharField(source='center.name', read_only=True)
     center_id = serializers.IntegerField()
 
+    model = serializers.CharField(required=False, allow_blank=True)
+    installation_year = serializers.IntegerField()
+    serial_number = serializers.IntegerField()
+
     files = DeviceFilesSerializer(many=True, read_only=True)
-    
+
     class Meta:
         model = Devices
-        fields = ['id', 'name', 'files', 'version', 'windows_version', 'system_password', 'bundle_version', 'center', 'center_id']
-
+        fields = '__all__'
 
 
 class CenterSerializer(serializers.ModelSerializer):

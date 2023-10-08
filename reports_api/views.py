@@ -3,7 +3,8 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
 from django.db.models import Count, Case, When, Value, Q, Min, Sum
-from django.db.models.functions import Trim
+from django.db.models.functions import Trim, Coalesce
+
 
 from database_api.models import Patient
 from database_api.views import get_filtered_patients
@@ -165,10 +166,13 @@ def GetPatientsDatedReport(request, *args, **kwargs):
 @permission_classes([IsAuthenticated])
 def GetSuccessRateView(request):
     body = json.loads(request.body)
-    patients = get_filtered_patients(body)
-    success = patients.values('surgery_result').annotate(count=Count('surgery_result'))
+    data = get_filtered_patients(body).annotate(c_surgery_result=Coalesce('surgery_result', 0))
+    success = data.values('c_surgery_result').annotate(count=Count('c_surgery_result'))
+    
+    print(list(success.values_list('count', flat=True)))
+    print(list(list(success.values_list('c_surgery_result', flat=True))))
 
     return JsonResponse({
         'count': list(success.values_list('count', flat=True)),
-        'labels': list(success.values_list('surgery_result', flat=True))
+        'labels': list(success.values_list('c_surgery_result', flat=True))
     })
