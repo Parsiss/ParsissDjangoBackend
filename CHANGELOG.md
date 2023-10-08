@@ -1,3 +1,11 @@
+## [A[B (October 08, 2023)
+  - Bump version to 1.3.0.
+  - Merge remote-tracking branch 'origin/main'
+  - Bump version to 1.2.1.
+  - Add Fields
+  - Bug fix
+  - fix bump-version default encoding
+
 ## 1.3.0 (October 08, 2023)
   - Merge remote-tracking branch 'origin/main'
   - Bump version to 1.3.0.
