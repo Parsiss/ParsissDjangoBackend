@@ -1,3 +1,6 @@
+## 1.3.1 (October 08, 2023)
+
+
 ## [A[B (October 08, 2023)
   - Bump version to 1.3.0.
   - Merge remote-tracking branch 'origin/main'
