@@ -31,8 +31,8 @@ class DeviceSerializer(serializers.ModelSerializer):
     center_id = serializers.IntegerField()
 
     model = serializers.CharField(required=False, allow_blank=True)
-    installation_year = serializers.IntegerField()
-    serial_number = serializers.IntegerField()
+    serial_number = serializers.CharField(required=False, allow_blank=True)
+    installation_year = serializers.IntegerField(required=False)
 
     files = DeviceFilesSerializer(many=True, read_only=True)
 
