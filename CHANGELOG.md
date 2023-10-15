@@ -1,3 +1,6 @@
+## 1.2.3 (October 15, 2023)
+  - fix nullable bug in device update
+
 ## 1.2.2 (October 15, 2023)
   - fix devices serialization bug
 
