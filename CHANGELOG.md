@@ -1,3 +1,6 @@
+## 1.2.2 (October 15, 2023)
+  - fix devices serialization bug
+
 ## 1.2.1 (October 04, 2023)
   - Add Fields
   - Bug fix
