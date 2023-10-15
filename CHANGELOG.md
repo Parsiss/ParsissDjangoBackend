@@ -1,3 +1,9 @@
+## 1.2.4 (October 15, 2023)
+  - Update django.yml
+  - Merge remote-tracking branch 'refs/remotes/origin/main'
+  - Update django.yml
+  - Update django.yml
+
 ## 1.2.3 (October 15, 2023)
   - fix nullable bug in device update
 
