@@ -1,3 +1,12 @@
+## 1.2.5 (November 04, 2023)
+  - Merge remote-tracking branch 'origin/main'
+  - add HistoricalRecords
+  - Bump version to 1.3.1.
+  - Bump version to [A[B.
+  - Bump version to 1.3.0.
+  - Merge remote-tracking branch 'origin/main'
+  - Bump version to 1.3.0.
+
 ## 1.2.4 (October 15, 2023)
   - Update django.yml
   - Merge remote-tracking branch 'refs/remotes/origin/main'
