@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.functions import Trim
 from django.db.models import Q
+from simple_history.models import HistoricalRecords
 
 
 class Patient(models.Model):
@@ -56,6 +57,7 @@ class Patient(models.Model):
     financial_verifier = models.CharField(max_length=100, default='')
     receipt_number = models.IntegerField(null=True)
     fre = models.FloatField(null=True)
+    history = HistoricalRecords()
 
     @property
     def previous_surgeries(self):

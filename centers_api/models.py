@@ -1,6 +1,8 @@
+from idlelib import history
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from simple_history.models import HistoricalRecords
 
 import os 
 
@@ -9,6 +11,7 @@ import os
 class Centers(models.Model):
     id = models.AutoField(primary_key=True) 
     name = models.TextField(max_length=100, null=False, blank=False)
+    history = HistoricalRecords()
 
 
 
@@ -24,6 +27,7 @@ class Devices(models.Model):
     serial_number = models.CharField(max_length=35)
     model = models.CharField(max_length=10, null=True)
     installation_year = models.IntegerField(null=True)
+    history = HistoricalRecords()
 
 
 class Events(models.Model):
@@ -41,6 +45,7 @@ class Events(models.Model):
     device = models.ForeignKey(Devices, on_delete=models.CASCADE, related_name='events')
     date = models.DateTimeField()
     description = models.TextField()
+    history = HistoricalRecords()
 
 
 
@@ -51,6 +56,7 @@ class DeviceFiles(models.Model):
     event = models.ForeignKey(to=Events, related_name='files', null=True, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add =True)
+    history = HistoricalRecords()
 
     def filename(self):
         return os.path.basename(self.file.name)
