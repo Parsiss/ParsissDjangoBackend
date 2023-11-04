@@ -24,8 +24,8 @@ class Devices(models.Model):
     system_password = models.TextField(max_length=100)
     center = models.ForeignKey(Centers, on_delete=models.CASCADE, related_name='devices')
 
-    serial_number = models.CharField(max_length=35)
     model = models.CharField(max_length=10, null=True)
+    serial_number = models.CharField(max_length=35)
     installation_year = models.IntegerField(null=True)
     history = HistoricalRecords()
 

@@ -97,6 +97,7 @@ def GetAllSelectOptions():
 
 def GetAdaptiveFilterOptions(queryset, fields):
     extra_fields_values = {}
+
     for field in fields:
         data = queryset.annotate(cleaned=Trim(field)).values_list('cleaned').annotate(count=Count('cleaned')).order_by('-count')
         extra_fields_values[field] = [{

@@ -1,17 +1,14 @@
-## 1.3.1 (October 08, 2023)
+## 1.2.4 (October 15, 2023)
+  - Update django.yml
+  - Merge remote-tracking branch 'refs/remotes/origin/main'
+  - Update django.yml
+  - Update django.yml
 
+## 1.2.3 (October 15, 2023)
+  - fix nullable bug in device update
 
-## [A[B (October 08, 2023)
-  - Bump version to 1.3.0.
-  - Merge remote-tracking branch 'origin/main'
-  - Bump version to 1.2.1.
-  - Add Fields
-  - Bug fix
-  - fix bump-version default encoding
-
-## 1.3.0 (October 08, 2023)
-  - Merge remote-tracking branch 'origin/main'
-  - Bump version to 1.3.0.
+## 1.2.2 (October 15, 2023)
+  - fix devices serialization bug
 
 ## 1.2.1 (October 04, 2023)
   - Add Fields
