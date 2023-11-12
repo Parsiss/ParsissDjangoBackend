@@ -76,7 +76,7 @@ def GetFilters(request):
 @permission_classes([IsAuthenticated])
 def GetAdaptiveFilters(request):
 
-    extra_fields = ['surgeon_first', 'hospital', 'operator_first']
+    extra_fields = ['surgeon_first', 'hospital', 'operator_first', 'surgery_type']
     body = json.loads(request.body)
     for field in extra_fields:
         if field in body:
@@ -126,119 +126,13 @@ class PatientDetailView(
         return self.destroy(request, id)
 
 
-def ready(request):
-    rows = transfer.rows
-    for row in rows:
-        name, family, age = row[4], row[5], row[6]
-        phone_number, national_id, address, email = row[7], row[8], row[9], row[10]
-        place_of_birth, surgery_date, surgery_day = row[11], row[12], row[13]
-        surgery_time, surgery_type, surgery_area = row[14], row[15], row[16]
-        surgery_description, surgery_result, surgeon_first = row[17], row[18], row[19]
-        surgeon_second, resident, hospital = row[20], row[21], row[22]
-        hospital_type, hospital_address, ct = row[23], row[24], row[25]
-        mr, fmri, dti, operator_first = row[26], row[27], row[28], row[29]
-        operator_second, start_time, stop_time = row[30], row[31], row[32]
-        enter_time, exit_time, patient_enter_time = row[33], row[34], row[35]
-        head_fix_type, cancellation_reason, file_number = row[36], row[37], row[38]
-        date_of_hospital_admission, payment_status, date_of_first_contact = row[39], row[40], row[41]
-        payment_note, first_caller, date_of_payment = row[42], row[43], row[44]
-        last_four_digits_card, cash_amount, bank = row[45], row[46], row[47]
-        discount_percent, reason_for_discount, health_plan_amount = row[48], row[49], row[50]
-        type_of_insurance, financial_verifier, _, _, _, fre = row[51], row[52], row[53], row[54], row[55], 0
-
-        # set time to None if it is 0
-        if surgery_time == 0:
-            surgery_time = None
-
-        if start_time == 0:
-            start_time = None
-        
-        if stop_time == 0:
-            stop_time = None
-        
-        if enter_time == 0:
-            enter_time = None
-        
-        if exit_time == 0:
-            exit_time = None
-        
-        if patient_enter_time == 0:
-            patient_enter_time = None
-
-        if surgery_date == 0:
-            surgery_date = None
-        
-        if date_of_hospital_admission == 0:
-            date_of_hospital_admission = None
-
-        if date_of_first_contact == 0:
-            date_of_first_contact = None
-        
-        if date_of_payment == 0:
-            date_of_payment = None
-
-        patient = Patient(
-            name=name,
-            family=family,
-            age=age,
-            phone_number=phone_number,
-            national_id=national_id,
-            address=address,
-            email=email,
-            place_of_birth=place_of_birth,
-            surgery_date=surgery_date.date() if surgery_date else None,
-            surgery_day=surgery_day,
-            surgery_time=surgery_time,
-            surgery_type=surgery_type,
-            surgery_area=surgery_area,
-            surgery_description=surgery_description,
-            surgery_result=surgery_result,
-            surgeon_first=surgeon_first,
-            surgeon_second=surgeon_second,
-            resident=resident,
-            hospital=hospital,
-            hospital_type=hospital_type,
-            hospital_address=hospital_address,
-            ct=ct,
-            mr=mr,
-            fmri=fmri,
-            dti=dti,
-            operator_first=operator_first,
-            operator_second=operator_second,
-            start_time=start_time,
-            stop_time=stop_time,
-            enter_time=enter_time,
-            exit_time=exit_time,
-            patient_enter_time=patient_enter_time,
-            head_fix_type=head_fix_type,
-            cancellation_reason=cancellation_reason,
-            file_number=file_number,
-            date_of_hospital_admission=date_of_hospital_admission.date() if date_of_hospital_admission else None,
-            payment_status=payment_status,
-            date_of_first_contact=date_of_first_contact.date() if date_of_first_contact else None,
-            payment_note=payment_note,
-            first_caller=first_caller,
-            date_of_payment=date_of_payment.date() if date_of_payment else None,
-            last_four_digits_card=last_four_digits_card,
-            cash_amount=cash_amount,
-            bank=bank,
-            discount_percent=discount_percent,
-            reason_for_discount=reason_for_discount,
-            health_plan_amount=health_plan_amount,
-            type_of_insurance=type_of_insurance,
-            financial_verifier=financial_verifier,
-            fre=fre
-        )
-        patient.save()
-    return HttpResponse('ok')
-
-
 @permission_classes([IsAuthenticated])
 def get_filtered_patients(filters):
     data = Patient.objects.all().annotate(
         cleaned_surgeon_first=Trim('surgeon_first'),
         cleaned_hospital=Trim('hospital'),
         cleaned_operator_first=Trim('operator_first'),
+        cleaned_surgery_type=Trim('surgery_type'),
     )
 
     if filters == None:
@@ -258,7 +152,7 @@ def get_filtered_patients(filters):
             if len(value) > 0:
                 q = Q()
                 for item in value:
-                    if key in ['surgeon_first', 'hospital', 'operator_first']:
+                    if key in ['surgeon_first', 'hospital', 'operator_first', 'surgery_type']:
                         q |= Q(**{'cleaned_' + key: item})
 
                     elif key == 'special_filters':
@@ -376,3 +270,145 @@ def UploadDB(request):
                 patient.surgery_description = data[9]
                 patient.save()
     return HttpResponse(status=200)
+
+
+def ready(request):
+    rows = transfer.rows
+    for row in rows:
+        name, family, age = row[4], row[5], row[6]
+        phone_number, national_id, address, email = row[7], row[8], row[9], row[10]
+        place_of_birth, surgery_date, surgery_day = row[11], row[12], row[13]
+        surgery_time, surgery_type, surgery_area = row[14], row[15], row[16]
+        surgery_description, surgery_result, surgeon_first = row[17], row[18], row[19]
+        surgeon_second, resident, hospital = row[20], row[21], row[22]
+        hospital_type, hospital_address, ct = row[23], row[24], row[25]
+        mr, fmri, dti, operator_first = row[26], row[27], row[28], row[29]
+        operator_second, start_time, stop_time = row[30], row[31], row[32]
+        enter_time, exit_time, patient_enter_time = row[33], row[34], row[35]
+        head_fix_type, cancellation_reason, file_number = row[36], row[37], row[38]
+        date_of_hospital_admission, payment_status, date_of_first_contact = row[39], row[40], row[41]
+        payment_note, first_caller, date_of_payment = row[42], row[43], row[44]
+        last_four_digits_card, cash_amount, bank = row[45], row[46], row[47]
+        discount_percent, reason_for_discount, health_plan_amount = row[48], row[49], row[50]
+        type_of_insurance, financial_verifier, _, _, _, fre = row[51], row[52], row[53], row[54], row[55], 0
+
+        # set time to None if it is 0
+        if surgery_time == 0:
+            surgery_time = None
+
+        if start_time == 0:
+            start_time = None
+
+        if stop_time == 0:
+            stop_time = None
+
+        if enter_time == 0:
+            enter_time = None
+
+        if exit_time == 0:
+            exit_time = None
+
+        if patient_enter_time == 0:
+            patient_enter_time = None
+
+        if surgery_date == 0:
+            surgery_date = None
+
+        if date_of_hospital_admission == 0:
+            date_of_hospital_admission = None
+
+        if date_of_first_contact == 0:
+            date_of_first_contact = None
+
+        if date_of_payment == 0:
+            date_of_payment = None
+
+        patient = Patient(
+            name=name,
+            family=family,
+            age=age,
+            phone_number=phone_number,
+            national_id=national_id,
+            address=address,
+            email=email,
+            place_of_birth=place_of_birth,
+            surgery_date=surgery_date.date() if surgery_date else None,
+            surgery_day=surgery_day,
+            surgery_time=surgery_time,
+            surgery_type=surgery_type,
+            surgery_area=surgery_area,
+            surgery_description=surgery_description,
+            surgery_result=surgery_result,
+            surgeon_first=surgeon_first,
+            surgeon_second=surgeon_second,
+            resident=resident,
+            hospital=hospital,
+            hospital_type=hospital_type,
+            hospital_address=hospital_address,
+            ct=ct,
+            mr=mr,
+            fmri=fmri,
+            dti=dti,
+            operator_first=operator_first,
+            operator_second=operator_second,
+            start_time=start_time,
+            stop_time=stop_time,
+            enter_time=enter_time,
+            exit_time=exit_time,
+            patient_enter_time=patient_enter_time,
+            head_fix_type=head_fix_type,
+            cancellation_reason=cancellation_reason,
+            file_number=file_number,
+            date_of_hospital_admission=date_of_hospital_admission.date() if date_of_hospital_admission else None,
+            payment_status=payment_status,
+            date_of_first_contact=date_of_first_contact.date() if date_of_first_contact else None,
+            payment_note=payment_note,
+            first_caller=first_caller,
+            date_of_payment=date_of_payment.date() if date_of_payment else None,
+            last_four_digits_card=last_four_digits_card,
+            cash_amount=cash_amount,
+            bank=bank,
+            discount_percent=discount_percent,
+            reason_for_discount=reason_for_discount,
+            health_plan_amount=health_plan_amount,
+            type_of_insurance=type_of_insurance,
+            financial_verifier=financial_verifier,
+            fre=fre
+        )
+        patient.save()
+    return HttpResponse('ok')
+
+
+def UpdateSurgeryType(request):
+    def is_valid_national_code(national_code):
+        # Check if the national code is exactly 10 digits
+        return not pd.isna(national_code) and str(national_code).isdigit() and len(str(national_code)) == 10
+    import pandas as pd
+    # Replace this with the path to your Excel file
+    EXCEL_FILE_PATH = '01.xlsx'
+
+    # Replace this with the name of the sheet in the Excel file
+    SHEET_NAME = '01-Filterd'
+
+    df = pd.read_excel(EXCEL_FILE_PATH, sheet_name=SHEET_NAME)
+    for index, row in df.iterrows():
+        national_code = str(row[24])
+        surgery_type = str(row[18])
+        phone_number = str(row[15])
+        if is_valid_national_code(national_code):
+            patients = Patient.objects.filter(national_id=national_code)
+            if patients.count() == 1:
+                patient = patients.first()
+            elif patients.count() > 1:
+                patient = Patient.objects.filter(national_id=national_code).filter(phone_number=phone_number).first()
+            else:
+                continue
+            if patient is not None:
+                if surgery_type == 'nan':
+                    patient.surgery_type = ""
+                else:
+                    patient.surgery_type = surgery_type
+                patient.save()
+        else:
+            print(f"Invalid or missing national code: {national_code}")
+    return HttpResponse('ok')

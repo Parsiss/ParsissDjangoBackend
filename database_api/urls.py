@@ -21,5 +21,6 @@ urlpatterns = [
 
     path('autofill/', views.GetAutofillData),
 
-    path('dsfl;ajsdflkjasdklfja;sdfjas/', views.ready)
+    path('dsfl;ajsdflkjasdklfja;sdfjas/', views.ready),
+    path('kjkklyyrffwedfwfrfvdvawdwwwe/', views.UpdateSurgeryType)
 ]
