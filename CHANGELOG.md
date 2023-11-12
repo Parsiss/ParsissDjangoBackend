@@ -1,3 +1,6 @@
+## 1.2.6 (November 12, 2023)
+  - add surgery_type
+
 ## 1.2.5 (November 04, 2023)
   - Merge remote-tracking branch 'origin/main'
   - add HistoricalRecords
