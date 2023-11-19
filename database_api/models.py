@@ -19,7 +19,7 @@ class Patient(models.Model):
     surgery_time = models.IntegerField(null=True)
     surgery_type = models.CharField(max_length=100, default='')
     surgery_area = models.IntegerField(null=True)
-    surgery_description = models.CharField(max_length=100, default='')
+    surgery_description = models.TextField(default='')
     surgery_result = models.IntegerField(null=True)
     surgeon_first = models.CharField(max_length=100, default='')
     surgeon_second = models.CharField(max_length=100, default='')
