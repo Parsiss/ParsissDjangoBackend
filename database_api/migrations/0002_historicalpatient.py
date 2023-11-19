@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('surgery_time', models.IntegerField(null=True)),
                 ('surgery_type', models.CharField(default='', max_length=100)),
                 ('surgery_area', models.IntegerField(null=True)),
-                ('surgery_description', models.TextField(default='')),
+                ('surgery_description', models.CharField(default='', max_length=100)),
                 ('surgery_result', models.IntegerField(null=True)),
                 ('surgeon_first', models.CharField(default='', max_length=100)),
                 ('surgeon_second', models.CharField(default='', max_length=100)),

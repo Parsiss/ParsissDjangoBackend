@@ -32,7 +32,7 @@ class PatientSerializer(serializers.ModelSerializer):
     SurgeryTime = serializers.IntegerField(source='surgery_time', allow_null=True)
     SurgeryType = serializers.CharField(max_length=100, source='surgery_type', default='', allow_blank=True)
     SurgeryArea = serializers.IntegerField(source='surgery_area', allow_null=True)
-    SurgeryDescription = serializers.CharField(max_length=100, source='surgery_description', default='', allow_blank=True)
+    SurgeryDescription = serializers.CharField(max_length=10000, source='surgery_description', default='', allow_blank=True)
     SurgeryResult = serializers.IntegerField(source='surgery_result', allow_null=True)
     SurgeonFirst = serializers.CharField(max_length=100, source='surgeon_first', default='', allow_blank=True)
     SurgeonSecond = serializers.CharField(max_length=100, source='surgeon_second', default='', allow_blank=True)
