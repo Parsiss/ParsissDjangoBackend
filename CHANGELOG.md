@@ -1,3 +1,6 @@
+## 1.2.7 (November 19, 2023)
+  - change surgery_description to TextField
+
 ## 1.2.6 (November 12, 2023)
   - add surgery_type
 
