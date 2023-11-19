@@ -1,3 +1,9 @@
+## 1.2.8 (November 19, 2023)
+  - edit max_length of surgery_description
+  - add migration
+  - add migration
+  - add migration
+
 ## 1.2.7 (November 19, 2023)
   - change surgery_description to TextField
 
