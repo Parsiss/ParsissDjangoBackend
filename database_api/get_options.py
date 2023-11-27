@@ -38,9 +38,10 @@ def GetAllSelectOptions():
 
     surgeryresult = {
         'surgery_result': [
+            {'Value': None, 'Text': ''},
             {'Value': 1, 'Text': 'Success'},
             {'Value': 2, 'Text': 'Canceled'},
-            {'Value': 3, 'Text': 'Fail'},
+            # {'Value': 3, 'Text': 'Fail'},
         ]
     }
 

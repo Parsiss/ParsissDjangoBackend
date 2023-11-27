@@ -21,6 +21,7 @@ class Patient(models.Model):
     surgery_area = models.IntegerField(null=True)
     surgery_description = models.TextField(default='')
     surgery_result = models.IntegerField(null=True)
+    refund_status = models.CharField(max_length=100, default='')
     surgeon_first = models.CharField(max_length=100, default='')
     surgeon_second = models.CharField(max_length=100, default='')
     resident = models.CharField(max_length=100, default='')
