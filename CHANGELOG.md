@@ -1,3 +1,10 @@
+## 1.2.8 (November 27, 2023)
+  - add RefundStatus field; Replace SurgeryResult=Failed to None
+  - edit max_length of surgery_description
+  - add migration
+  - add migration
+  - add migration
+
 ## 1.2.7 (November 19, 2023)
   - change surgery_description to TextField
 
