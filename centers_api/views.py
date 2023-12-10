@@ -3,8 +3,8 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Devices, Centers, Events, DeviceFiles
-from .serializers import DeviceSerializer, CenterSerializer, EventsSerizlier, DeviceFilesSerializer
+from .models import Devices, Centers, Events, DeviceFiles, DeviceHints
+from .serializers import DeviceSerializer, CenterSerializer, EventsSerizlier, DeviceFilesSerializer, DeviceHintsSerializer
 
 import json 
 
@@ -22,6 +22,28 @@ class CentersListView(ListModelMixin, CreateModelMixin, GenericAPIView):
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+
+class DeviceHintsDetailView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
+    queryset = DeviceHints.objects.all()
+    serializer_class = DeviceHintsSerializer
+    lookup_field = 'id'
+    permission_classes = [IsAuthenticated]
+
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+
+class DeviceHintsListView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    queryset = DeviceHints.objects.all()
+    serializer_class = DeviceHintsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    
 
 
 class CentersDetailView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):

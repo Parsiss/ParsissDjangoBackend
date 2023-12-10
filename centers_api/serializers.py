@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Devices, Centers, Events, DeviceFiles
+from .models import DeviceHints, Devices, Centers, Events, DeviceFiles
 
 
 class DeviceFilesSerializer(serializers.ModelSerializer):
@@ -20,6 +20,17 @@ class DeviceFilesSerializer(serializers.ModelSerializer):
 
 
 
+class DeviceHintsSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    description = serializers.CharField()
+    device_id = serializers.IntegerField()
+    is_essential = serializers.BooleanField()
+
+    class Meta:
+        model = DeviceHints 
+        fields = ['id', 'description', 'device_id', 'is_essential']
+
+
 class DeviceSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField()
@@ -34,11 +45,15 @@ class DeviceSerializer(serializers.ModelSerializer):
     serial_number = serializers.CharField(required=False, allow_blank=True)
     installation_year = serializers.IntegerField(required=False, allow_null=True)
 
+    hints = DeviceHintsSerializer(many=True, read_only=True)
+
     files = DeviceFilesSerializer(many=True, read_only=True)
 
     class Meta:
         model = Devices
         fields = '__all__'
+
+
 
 
 class CenterSerializer(serializers.ModelSerializer):

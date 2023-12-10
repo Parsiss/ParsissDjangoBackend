@@ -15,6 +15,8 @@ class Centers(models.Model):
 
 
 
+
+
 class Devices(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.TextField(max_length=100)
@@ -23,12 +25,21 @@ class Devices(models.Model):
     windows_version = models.TextField(max_length=100)
     system_password = models.TextField(max_length=100)
     center = models.ForeignKey(Centers, on_delete=models.CASCADE, related_name='devices')
-
+    
     model = models.CharField(max_length=10, null=True)
     serial_number = models.CharField(max_length=35)
     installation_year = models.IntegerField(null=True)
     history = HistoricalRecords()
 
+
+class DeviceHints(models.Model):
+    id = models.AutoField(primary_key=True)
+    device = models.ForeignKey(Devices, on_delete=models.CASCADE, related_name='hints')
+    description = models.TextField()
+    history = HistoricalRecords()
+
+    is_essential = models.BooleanField(default=False)
+    
 
 class Events(models.Model):
     class EventType(models.TextChoices):

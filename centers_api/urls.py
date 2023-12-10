@@ -17,4 +17,7 @@ urlpatterns = [
     path('events/', views.EventsListView.as_view()),
     path('events/<id>/', views.EventsDetailView.as_view()),
     path('events/search/<device_id>/', views.EventsFilteredView.as_view()),
+
+    path('hints/<id>/', views.DeviceHintsDetailView.as_view()),
+    path('hints/', views.DeviceHintsListView.as_view()),
 ]
