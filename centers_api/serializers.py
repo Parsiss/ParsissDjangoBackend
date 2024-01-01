@@ -76,6 +76,11 @@ class CenterSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'devices', 'devices_id']
 
 
+class RecursiveField(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+
 
 class EventsSerizlier(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -85,10 +90,12 @@ class EventsSerizlier(serializers.ModelSerializer):
     device_id = serializers.IntegerField()
     files = DeviceFilesSerializer(many=True, read_only=True)
 
+    parent_id = serializers.IntegerField(allow_null=True, required=False)
+
+    children = RecursiveField(many=True, read_only=True)
+    can_have_children = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = Events
-        fields = ['id', 'files', 'description', 'device_id', 'date', 'type']
-
-
-
+        fields = ['id', 'files', 'description', 'device_id', 'date', 'type', 'parent_id', 'children', 'can_have_children']
 

@@ -1,3 +1,4 @@
+from requests import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.mixins import UpdateModelMixin, CreateModelMixin, DestroyModelMixin, ListModelMixin, RetrieveModelMixin
@@ -6,9 +7,12 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Devices, Centers, Events, DeviceFiles, DeviceHints
 from .serializers import DeviceSerializer, CenterSerializer, EventsSerizlier, DeviceFilesSerializer, DeviceHintsSerializer
 
-import json 
+from rest_framework.decorators import permission_classes, api_view
+from django.views.decorators.csrf import csrf_exempt
 
-
+from django.db.models import Q, Count
+from django.db.models.functions import Trim
+from django.http import JsonResponse, HttpResponse
 
 
 class CentersListView(ListModelMixin, CreateModelMixin, GenericAPIView):
@@ -43,7 +47,13 @@ class DeviceHintsListView(ListModelMixin, CreateModelMixin, GenericAPIView):
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def GetAllHintsUniquely(request):
+    hints = DeviceHints.objects.all().annotate(cleaned=Trim('description')).values('cleaned', 'is_essential').annotate(count=Count('description')).order_by('-count')
+    hints = {('*' if hint['is_essential'] else '') + hint['cleaned']: hint['count']  for hint in hints}
+    return JsonResponse(hints)
 
 
 class CentersDetailView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
@@ -125,14 +135,13 @@ class EventsDetailView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, 
 
 class EventsFilteredView(ListModelMixin, GenericAPIView):
     def get_queryset(self):
-        return Events.objects.filter(device_id=self.kwargs['device_id'])
+        return Events.objects.filter(device_id=self.kwargs['device_id'], parent__isnull=True)
 
     serializer_class = EventsSerizlier
     permission_classes = [IsAuthenticated]
     
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
-
 
 
 class DeviceFilesUploadView(CreateModelMixin, GenericAPIView):

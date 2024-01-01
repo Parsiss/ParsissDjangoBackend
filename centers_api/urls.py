@@ -20,4 +20,5 @@ urlpatterns = [
 
     path('hints/<id>/', views.DeviceHintsDetailView.as_view()),
     path('hints/', views.DeviceHintsListView.as_view()),
+    path('all_hints/', views.GetAllHintsUniquely)
 ]

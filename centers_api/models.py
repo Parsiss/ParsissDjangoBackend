@@ -14,9 +14,6 @@ class Centers(models.Model):
     history = HistoricalRecords()
 
 
-
-
-
 class Devices(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.TextField(max_length=100)
@@ -45,6 +42,7 @@ class Events(models.Model):
     class EventType(models.TextChoices):
         NONE = 'NA', _('NONE')
         SERVICE = 'SV', _('SERVICE')
+        FACTOR = 'FC', _('FACTOR')
 
     type = models.CharField(
         max_length=2,
@@ -56,9 +54,17 @@ class Events(models.Model):
     device = models.ForeignKey(Devices, on_delete=models.CASCADE, related_name='events')
     date = models.DateTimeField()
     description = models.TextField()
+    
+
     history = HistoricalRecords()
+    
 
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children', null=True)
 
+    @property
+    def can_have_children(self):
+        return self.type == Events.EventType.FACTOR
+    
 
 class DeviceFiles(models.Model):
     id = models.AutoField(primary_key=True)
