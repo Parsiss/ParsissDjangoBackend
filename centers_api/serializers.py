@@ -95,7 +95,9 @@ class EventsSerizlier(serializers.ModelSerializer):
     children = RecursiveField(many=True, read_only=True)
     can_have_children = serializers.BooleanField(read_only=True)
 
+    type_specific_field = serializers.JSONField(required=False)
+
     class Meta:
         model = Events
-        fields = ['id', 'files', 'description', 'device_id', 'date', 'type', 'parent_id', 'children', 'can_have_children']
+        fields = ['id', 'type_specific_field', 'files', 'description', 'device_id', 'date', 'type', 'parent_id', 'children', 'can_have_children']
 

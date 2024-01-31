@@ -41,8 +41,14 @@ class DeviceHints(models.Model):
 class Events(models.Model):
     class EventType(models.TextChoices):
         NONE = 'NA', _('NONE')
-        SERVICE = 'SV', _('SERVICE')
+        REQUEST_SERIVER = 'RS', _('REQUEST')
+        INITIAL_INVEGITATION = 'II', _('INVESTIGATION')
+        PRE_FACTOR = 'PF', _('PREFACTOR')
         FACTOR = 'FC', _('FACTOR')
+        SERVICE = 'SV', _('SERVICE')
+        INSTALLATION = 'IN', _("INSTALLATION")
+
+
 
     type = models.CharField(
         max_length=2,
@@ -53,13 +59,15 @@ class Events(models.Model):
     id = models.AutoField(primary_key=True)
     device = models.ForeignKey(Devices, on_delete=models.CASCADE, related_name='events')
     date = models.DateTimeField()
-    description = models.TextField()
     
+    description = models.TextField()
+    type_specific_field = models.JSONField()
 
     history = HistoricalRecords()
-    
 
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children', null=True)
+
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='children', null=True)
+    # next = models.ForeignKey('self',  on_delete=models.SET_NULL, related_name='previous', null=True)
 
     @property
     def can_have_children(self):
