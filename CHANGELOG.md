@@ -1,3 +1,6 @@
+## 1.2.12 (January 31, 2024)
+  - upate serve info
+
 ## 1.2.11 (January 01, 2024)
   - update centers common problem
 
