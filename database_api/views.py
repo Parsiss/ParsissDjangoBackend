@@ -251,7 +251,7 @@ def UploadDB(request):
         f.write(reqBody)
     db = sqlite3.connect('temp.db')
     cursor = db.cursor()
-    cursor.execute('SELECT SurgeryForms.NationalCode, RegistrationData.Error FROM RegistrationData INNER JOIN SurgeryForms ON RegistrationData.PatientUid = SurgeryForms.PatientUid')
+    cursor.execute('SELECT SurgeryForms.NationalCode, RegistrationData.ErrorMean FROM RegistrationData INNER JOIN SurgeryForms ON RegistrationData.PatientUid = SurgeryForms.PatientUid')
     joined_data = cursor.fetchall()
     for data in joined_data:
         national_id = data[0]
