@@ -3,7 +3,9 @@ venv/
 dist/
 build/
 uploads/
+crmenv/
 .idea
 .env
 .vscode
+temp.db
 

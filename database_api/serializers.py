@@ -69,7 +69,7 @@ class PatientSerializer(serializers.ModelSerializer):
     TypeOfInsurance = serializers.CharField(max_length=100, source='type_of_insurance', default='', allow_blank=True)
     FinancialVerifier = serializers.CharField(max_length=100, source='financial_verifier', default='', allow_blank=True)
     ReceiptNumber = serializers.IntegerField(source='receipt_number', allow_null=True)
-    FRE = serializers.IntegerField(source='fre', allow_null=True)
+    FRE = serializers.FloatField(source='fre', allow_null=True)
 
     PreviousSurgeries = serializers.ListField(child=serializers.ListField(child=serializers.CharField(max_length=100)), source='previous_surgeries.all', read_only=True)
 
