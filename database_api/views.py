@@ -268,7 +268,9 @@ def UploadDB(request):
         for patient in fulldata:
             if patient.surgery_description == "":
                 patient.surgery_description = data[9]
-                patient.save()
+            patient.start_time = data[7]
+            patient.stop_time = data[8]
+            patient.save()
     return HttpResponse(status=200)
 
 
